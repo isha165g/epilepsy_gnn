@@ -107,18 +107,19 @@ def notch_filter(
 
 
 def filter_eeg(
-    data: np.ndarray,
-    sfreq: float,
-    low_freq: float = 0.5,
-    high_freq: float = 40.0,
-    notch_freq: float = 50.0,
-) -> np.ndarray:
+    data,
+    sfreq,
+    low_freq=0.5,
+    high_freq=40.0,
+    order=4,
+):
     """
-    Apply the complete EEG filtering pipeline.
+    Primary EEG preprocessing filter.
 
-    Pipeline:
-        1. 0.5-40 Hz band-pass
-        2. 50 Hz notch filter
+    Applies a 0.5–40 Hz zero-phase Butterworth bandpass filter.
+
+    The previous 50 Hz notch filter is intentionally not applied
+    because the upper bandpass cutoff is already 40 Hz.
     """
 
     filtered = bandpass_filter(
@@ -126,12 +127,7 @@ def filter_eeg(
         sfreq=sfreq,
         low_freq=low_freq,
         high_freq=high_freq,
-    )
-
-    filtered = notch_filter(
-        filtered,
-        sfreq=sfreq,
-        notch_freq=notch_freq,
+        order=order,
     )
 
     return filtered
