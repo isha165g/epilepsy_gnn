@@ -1,0 +1,93 @@
+# ============================================================
+# Python & Environments
+# ============================================================
+__pycache__/
+*.py[cod]
+*.class
+*.so
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================================
+# Jupyter & Notebooks
+# ============================================================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# ============================================================
+# Testing, Linting & Type Checking
+# ============================================================
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ============================================================
+# IDEs & OS Files
+# ============================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# Datasets & Large Binary Files (TUSZ / Preprocessed)
+# ============================================================
+# Raw EEG datasets (~2GB EDF files)
+data/raw/*
+!data/raw/.gitkeep
+
+# Processed EEG graphs / tensors / windows
+data/processed/*
+!data/processed/.gitkeep
+
+# TUSZ raw annotations folder (~48MB)
+data/metadata/tusz_annotations/
+
+# Binary data and model weights
+*.edf
+*.fif
+*.bdf
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.ckpt
+*.parquet
+
+# ============================================================
+# Logs, Runs & Checkpoints
+# ============================================================
+logs/*
+!logs/.gitkeep
+*.log
+runs/
+wandb/
+checkpoints/
