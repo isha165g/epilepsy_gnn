@@ -1,0 +1,44 @@
+[
+  {
+    "feature_mode": "handcrafted",
+    "input_dim": 16,
+    "best_epoch": 2,
+    "best_dev_loss": 0.7542331331669678,
+    "train_sequences": 2764,
+    "dev_sequences": 5409,
+    "train_class_counts": [
+      839,
+      1925
+    ],
+    "checkpoint": "results/ablation/models/handcrafted_best.pt",
+    "training_log": "results/ablation/logs/handcrafted_training.csv"
+  },
+  {
+    "feature_mode": "time_frequency",
+    "input_dim": 10,
+    "best_epoch": 1,
+    "best_dev_loss": 0.7365616389950932,
+    "train_sequences": 2764,
+    "dev_sequences": 5409,
+    "train_class_counts": [
+      839,
+      1925
+    ],
+    "checkpoint": "results/ablation/models/time_frequency_best.pt",
+    "training_log": "results/ablation/logs/time_frequency_training.csv"
+  },
+  {
+    "feature_mode": "multimodal",
+    "input_dim": 26,
+    "best_epoch": 2,
+    "best_dev_loss": 0.7584901210626583,
+    "train_sequences": 2764,
+    "dev_sequences": 5409,
+    "train_class_counts": [
+      839,
+      1925
+    ],
+    "checkpoint": "results/ablation/models/multimodal_best.pt",
+    "training_log": "results/ablation/logs/multimodal_training.csv"
+  }
+]
