@@ -1,0 +1,15 @@
+{
+  "n_samples": 5409,
+  "accuracy": 0.49916805324459235,
+  "balanced_accuracy": 0.5138322759741731,
+  "sensitivity": 0.741106719367589,
+  "specificity": 0.28655783258075723,
+  "tn": 825,
+  "fp": 2054,
+  "fn": 655,
+  "tp": 1875,
+  "roc_auc": 0.5158227013936273,
+  "average_precision": 0.4873936440684304,
+  "median_patient_auc": 0.556149732620321,
+  "mean_patient_auc": 0.5481003148862015
+}
