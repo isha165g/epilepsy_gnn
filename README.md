@@ -72,9 +72,13 @@ flowchart TD
 ### Mathematical Formulation
 
 - **Gradient Reversal Layer (GRL):**
+
   $$\mathcal{R}_{\alpha}(h)=h \quad (\text{forward}), \qquad \frac{d\mathcal{R}_{\alpha}}{dh}=-\alpha\mathbf{I} \quad (\text{backward})$$
+
 - **Optimization Objective:**
+
   $$\min_{\theta_y,\theta_d}\max_{\theta_E}\left[\mathcal{L}_{\text{seizure}}(G_y(h),y)-\alpha(p)\cdot\lambda\cdot\mathcal{L}_{\text{patient}}(G_d(h),d)\right]$$
+
 - **Dynamic GRL Schedule**:
   $$\alpha(p) = \frac{2}{1 + \exp(-10p)} - 1 \quad \text{for training progress } p \in [0, 1]$$
   This schedules the adversarial strength smoothly from $0 \to 1.0$, preventing gradient shock in early epochs while driving subject-invariance in later representations.
