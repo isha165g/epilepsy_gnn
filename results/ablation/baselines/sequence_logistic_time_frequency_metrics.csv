@@ -1,0 +1,2 @@
+model,sequence_length,input_features,train_samples,dev_samples,roc_auc,average_precision,balanced_accuracy,sensitivity,specificity,tn,fp,fn,tp
+sequence_logistic_time_frequency,6,1200,2764,5409,0.5038421196424429,0.47019777463471063,0.5014219089577381,0.433201581027668,0.5696422368878082,1640,1239,1434,1096
