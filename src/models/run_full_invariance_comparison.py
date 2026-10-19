@@ -139,3 +139,6 @@ comparison = [
 comp_df = pd.DataFrame(comparison)
 print('=' * 80)
 print(comp_df.to_string(index=False))
+comp_df.to_csv(OUTPUT_DIR / 'baseline_vs_invariant_comparison.csv', index=False)
+print('=' * 80)
+print('Summary saved to:', OUTPUT_DIR / 'baseline_vs_invariant_comparison.csv')

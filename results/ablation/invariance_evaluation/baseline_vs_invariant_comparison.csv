@@ -1,0 +1,3 @@
+Model,Train ROC-AUC,Dev ROC-AUC (Pooled),Dev Balanced Accuracy,Dev Sensitivity,Dev Specificity,Dev PR-AUC,Dev Patient Median AUC,Dev Patient Mean AUC,Patient Leakage Probe Acc,Generalization Diagnosis
+Baseline Multimodal GAT-GRU,0.771577,0.453867,0.482519,0.949407,0.01563,0.448069,0.545455,0.548959,0.767366,Severe Shortcut Learning (Memorized Patient ID)
+Invariant Spatiotemporal GNN (Proposed),0.799186,0.515823,0.513832,0.741107,0.286558,0.487394,0.55615,0.5481,0.371563,Patient-Invariant Seizure Pattern Learning

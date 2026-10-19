@@ -1,0 +1,4 @@
+Model Architecture,Input Modality,Train ROC-AUC,Dev ROC-AUC,Dev Balanced Accuracy,Dev Sensitivity,Dev Specificity,Dev PR-AUC,Dev Patient Median AUC,Patient Leakage Probe Acc,Shortcut Resistance,Generalization Diagnosis
+Sequence Logistic Regression,Time-Frequency (Flattened 6x200),,0.5038421196424429,0.5014219089577381,0.433201581027668,0.5696422368878082,0.4701977746347106,0.5392096075967044,,Flat Linear (No Representations),Unstructured Linear Baseline
+Baseline Multimodal GAT-GRU,Handcrafted + Time-Frequency Graph,0.771577,0.453867,0.482519,0.949407,0.01563,0.448069,0.545455,0.767366,Vulnerable (76.7% Leakage),Severe Shortcut Learning (Memorized Patient ID)
+Domain-Adversarial Invariant GAT-GRU,Invariant Graph (Rec-Normed TF+HC),0.799186,0.515823,0.513832,0.741107,0.286558,0.487394,0.55615,0.371563,Robust / Invariant (-39.6% Leakage),Patient-Invariant Seizure Pattern Learning
