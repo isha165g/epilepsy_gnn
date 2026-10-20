@@ -214,5 +214,108 @@ def resample_data(data, original_sfreq, target_sfreq=256):
 
     return resampled_data
 
+
+# ============================================================
+# Standard 10-20 19-Channel Unipolar Montage (Tang et al. ICLR 2022)
+# ============================================================
+
+STANDARD_1020_UNIPOLAR = [
+    "FP1", "FP2", "F3", "F4", "C3", "C4",
+    "P3", "P4", "O1", "O2", "F7", "F8",
+    "T3", "T4", "T5", "T6", "FZ", "CZ", "PZ",
+]
+
+UNIPOLAR_CHANNEL_INDICES = {ch: i for i, ch in enumerate(STANDARD_1020_UNIPOLAR)}
+
+
+def get_unipolar_to_bipolar_matrix():
+    """
+    Compute (20, 19) linear projection matrix M mapping standard 19-channel
+    unipolar 10-20 EEG to the standardized 20-channel bipolar montage:
+        X_bipolar = M @ X_unipolar
+    """
+    M = np.zeros((len(BIPOLAR_PAIRS), len(STANDARD_1020_UNIPOLAR)), dtype=np.float64)
+    for k, (name, first, second) in enumerate(BIPOLAR_PAIRS):
+        if first not in UNIPOLAR_CHANNEL_INDICES or second not in UNIPOLAR_CHANNEL_INDICES:
+            raise KeyError(f"Electrode {first} or {second} not in STANDARD_1020_UNIPOLAR")
+        M[k, UNIPOLAR_CHANNEL_INDICES[first]] = 1.0
+        M[k, UNIPOLAR_CHANNEL_INDICES[second]] = -1.0
+    return M
+
+
+def convert_unipolar_to_bipolar(unipolar_data):
+    """
+    Convert 19-channel unipolar EEG into 20-channel bipolar EEG using linear projection.
+
+    Parameters
+    ----------
+    unipolar_data : np.ndarray
+        Shape (19, n_samples)
+
+    Returns
+    -------
+    bipolar_data : np.ndarray
+        Shape (20, n_samples)
+    channel_names : list[str]
+        20 standardized bipolar channel names.
+    """
+    unipolar_data = np.asarray(unipolar_data, dtype=np.float64)
+    if unipolar_data.ndim != 2 or unipolar_data.shape[0] != len(STANDARD_1020_UNIPOLAR):
+        raise ValueError(
+            f"Expected shape (19, n_samples), got {unipolar_data.shape}"
+        )
+    M = get_unipolar_to_bipolar_matrix()
+    bipolar_data = M @ unipolar_data
+    channel_names = [name for name, _, _ in BIPOLAR_PAIRS]
+    return bipolar_data, channel_names
+
+
+def create_unipolar_1020_montage(raw, reference="average"):
+    """
+    Create standardized 19-channel unipolar 10-20 montage (Tang et al. ICLR 2022).
+
+    Parameters
+    ----------
+    raw : mne.io.Raw
+        Raw MNE EDF object.
+    reference : str
+        'average' (common average reference across the 19 electrodes) or 'raw'.
+
+    Returns
+    -------
+    data : np.ndarray
+        Shape: (19, n_samples)
+    channel_names : list[str]
+        19 unipolar channel names in standard 10-20 order.
+    """
+    electrode_channels = get_electrode_channels(raw)
+    missing = [el for el in STANDARD_1020_UNIPOLAR if el not in electrode_channels]
+    if missing:
+        raise ValueError(f"Missing required 10-20 electrodes: {', '.join(missing)}")
+
+    actual_channels = [electrode_channels[el] for el in STANDARD_1020_UNIPOLAR]
+    data = raw.get_data(picks=actual_channels).astype(np.float64)
+
+    if reference == "average":
+        avg_ref = np.mean(data, axis=0, keepdims=True)
+        data = data - avg_ref
+
+    if not np.isfinite(data).all():
+        raise ValueError("Unipolar montage contains NaN or Inf values.")
+
+    return data, list(STANDARD_1020_UNIPOLAR)
+
+
+def load_and_create_unipolar_montage(edf_path, target_sfreq=256, reference="average"):
+    """
+    Load an EDF, create standardized 19-channel unipolar montage, and resample to target_sfreq.
+    """
+    edf_path = Path(edf_path)
+    raw = mne.io.read_raw_edf(edf_path, preload=False, verbose="ERROR")
+    data, channel_names = create_unipolar_1020_montage(raw, reference=reference)
+    original_sfreq = raw.info["sfreq"]
+    data = resample_data(data, original_sfreq, target_sfreq)
+    return data, channel_names, target_sfreq
+
 if __name__ == "__main__":
     print("Montage module loaded successfully.")

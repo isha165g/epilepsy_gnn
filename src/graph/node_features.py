@@ -278,3 +278,98 @@ def extract_node_features(
         feature_df.to_numpy(dtype=np.float32),
         list(feature_df.columns)
     )
+
+# ============================================================
+# Advanced Morphological Features (Hjorth, ZCR, Energy)
+# ============================================================
+
+def zero_crossing_rate(signal):
+    """Compute normalized zero-crossing rate."""
+    zero_crosses = np.nonzero(np.diff(signal > 0))[0]
+    return float(len(zero_crosses) / max(1, len(signal) - 1))
+
+
+def energy_feature(signal):
+    """Compute total signal energy."""
+    return float(np.sum(signal ** 2))
+
+
+def hjorth_parameters(signal):
+    """
+    Compute Hjorth Activity, Mobility, and Complexity.
+
+    Activity   = var(signal)
+    Mobility   = sqrt(var(diff(signal)) / var(signal))
+    Complexity = Mobility(diff(signal)) / Mobility(signal)
+    """
+    variance = float(np.var(signal))
+    if variance < 1e-12:
+        return 0.0, 0.0, 0.0
+
+    d1 = np.diff(signal)
+    var_d1 = float(np.var(d1))
+    if var_d1 < 1e-12:
+        return variance, 0.0, 0.0
+
+    mobility = np.sqrt(var_d1 / variance)
+
+    d2 = np.diff(d1)
+    var_d2 = float(np.var(d2))
+    if var_d2 < 1e-12:
+        return variance, float(mobility), 0.0
+
+    mobility_d1 = np.sqrt(var_d2 / var_d1)
+    complexity = float(mobility_d1 / max(1e-12, mobility))
+
+    return variance, float(mobility), float(complexity)
+
+
+def extract_multimodal_streams(signal, sfreq=SFREQ):
+    """
+    Extract strictly separated Time-Domain Morphological Stream (x_time)
+    and Frequency-Domain Spectral Stream (x_freq).
+
+    Returns
+    -------
+    x_time : np.ndarray
+        Shape (8,): [mean, std, rms, peak_to_peak, line_length, hjorth_activity, hjorth_mobility, hjorth_complexity]
+    x_freq : np.ndarray
+        Shape (11,): [spectral_entropy, 5 abs band powers, 5 rel band powers]
+    feature_names : tuple of (list[str], list[str])
+    """
+    var, mob, comp = hjorth_parameters(signal)
+    time_feats = [
+        mean_feature(signal),
+        std_feature(signal),
+        rms_feature(signal),
+        peak_to_peak_feature(signal),
+        line_length_feature(signal),
+        var,
+        mob,
+        comp,
+    ]
+    time_names = [
+        "mean", "std", "rms", "peak_to_peak", "line_length",
+        "hjorth_activity", "hjorth_mobility", "hjorth_complexity"
+    ]
+
+    abs_f = extract_frequency_features(signal, sfreq)
+    rel_f = extract_relative_frequency_features(abs_f)
+    freq_feats = [
+        spectral_entropy(signal, sfreq),
+        abs_f["delta_power"], abs_f["theta_power"], abs_f["alpha_power"],
+        abs_f["beta_power"], abs_f["gamma_power"],
+        rel_f["delta_relative_power"], rel_f["theta_relative_power"], rel_f["alpha_relative_power"],
+        rel_f["beta_relative_power"], rel_f["gamma_relative_power"],
+    ]
+    freq_names = [
+        "spectral_entropy",
+        "abs_delta", "abs_theta", "abs_alpha", "abs_beta", "abs_gamma",
+        "rel_delta", "rel_theta", "rel_alpha", "rel_beta", "rel_gamma"
+    ]
+
+    return (
+        np.asarray(time_feats, dtype=np.float32),
+        np.asarray(freq_feats, dtype=np.float32),
+        (time_names, freq_names),
+    )

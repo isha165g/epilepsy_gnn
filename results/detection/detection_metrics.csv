@@ -1,0 +1,2 @@
+Model,Evaluation,Dev_Accuracy_%,Dev_Balanced_Accuracy_%,Dev_Sensitivity_%,Dev_Specificity_%,Dev_F1_Score_%,Dev_ROC_AUC,Dev_PR_AUC,True_Positives,True_Negatives,False_Positives,False_Negatives,Total_Sequences,Unseen_Patients
+Patient-Independent Invariant GAT-GRU,Held-Out Unseen Patients (Zero Calibration),90.86,90.94,94.59,87.28,91.03,0.9597,0.9486,472,453,66,27,1018,17

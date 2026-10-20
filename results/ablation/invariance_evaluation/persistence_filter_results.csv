@@ -1,0 +1,7 @@
+Configuration,EMA_beta,Threshold,Consensus_k_N,Window_Acc_%,Window_BAcc_%,Window_Sens_%,Window_Spec_%,Event_Sens_%,Event_Spec_%,Event_Acc_%,TP_Seizures,Total_Seizures
+1. Raw Unfiltered Baseline,0.0,0.5,1/1,49.92,51.38,74.11,28.66,100.0,10.53,59.04,45,45
+2. EMA Smoothing Only (beta=0.7),0.7,0.5,1/1,49.49,51.07,75.57,26.57,100.0,7.89,57.83,45,45
+3. Consensus Voting (3-of-5),0.0,0.5,3/5,50.4,51.93,75.61,28.24,100.0,10.53,59.04,45,45
+"4. Hybrid EMA + Consensus (beta=0.7, 3-of-5)",0.7,0.5,3/5,49.71,51.31,76.13,26.5,100.0,7.89,57.83,45,45
+"5. Calibrated Hybrid (beta=0.75, 4-of-5, tau=0.55)",0.75,0.55,4/5,49.08,49.75,60.04,39.46,100.0,13.16,60.24,45,45
+"6. High-Specificity Clinical Alarm (beta=0.8, 6-of-10, tau=0.60)",0.8,0.6,6/10,49.34,49.54,52.53,46.54,97.78,13.16,59.04,44,45
