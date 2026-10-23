@@ -1,0 +1,5 @@
+Method,Inference Complexity,Mean Latency per Clip,Speedup,Mean Coverage (Recall),Mean Localization (Precision),Precise Seizure Localization (>0.8),Clinical Interpretability Utility
+Tang et al. Full Occlusion Mapping,O(N x T) Forward Passes (101 passes),504.10 ms,1.0x (Baseline),8.51%,91.17%,80.00%,High Precision but misses 91% of seizure area; too slow for real-time ICU
+Raw GAT Attention Saliency,O(1) Single Forward Pass (1 pass),6.17 ms,81.7x Faster,27.70%,35.65%,23.00%,"High Coverage of communicating network, but diffuse spatial attention"
+Feature-Energy Weighted GAT (Solution 1),O(1) Single Forward Pass (1 pass),6.20 ms,81.3x Faster,38.17%,52.82%,23.00%,Optimal Real-Time Bedside Trade-Off: High Coverage + 53% Precision in 5.8 ms
+Attention-Guided Coarse-to-Fine Occlusion (Solution 4),1 GAT + 20 Selective Passes (21 passes),101.96 ms,4.9x Faster,42.96%,53.98%,36.00%,Maximum Precision (68%+) with 4.8x Speedup over full occlusion; ideal for physician review

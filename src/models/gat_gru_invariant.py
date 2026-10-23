@@ -200,8 +200,7 @@ class InvariantGatedMultimodalGATGRU(nn.Module):
             nn.Linear(32, num_patients),
         )
 
-    def extract_embedding(self, x, edge_index):
-        # x: (batch_size, seq_len, num_nodes, num_features)
+    def extract_embedding(self, x, edge_index, return_attention=False):
         batch_size, seq_len, num_nodes, num_features = x.shape
         if num_features != (self.time_dim + self.freq_dim):
             raise ValueError(
@@ -217,6 +216,7 @@ class InvariantGatedMultimodalGATGRU(nn.Module):
         ).permute(1, 0, 2).reshape(2, -1)
 
         temporal_embeddings = []
+        temporal_attentions = []
         last_gate = None
 
         for t in range(seq_len):
@@ -228,7 +228,14 @@ class InvariantGatedMultimodalGATGRU(nn.Module):
             last_gate = gate
 
             node_x = fused_x.reshape(batch_size * num_nodes, self.fused_dim)
-            node_x = self.gat1(node_x, batched_edges)
+            if return_attention:
+                node_x, (b_edges, alpha) = self.gat1(node_x, batched_edges, return_attention_weights=True)
+                node_att = torch.zeros(batch_size * num_nodes, device=x.device, dtype=torch.float32)
+                node_att.scatter_add_(0, b_edges[1], alpha.squeeze(-1))
+                temporal_attentions.append(node_att.reshape(batch_size, num_nodes))
+            else:
+                node_x = self.gat1(node_x, batched_edges)
+
             node_x = self.relu(node_x)
             node_x = self.dropout(node_x)
 
@@ -241,11 +248,22 @@ class InvariantGatedMultimodalGATGRU(nn.Module):
         temporal_embeddings = torch.stack(temporal_embeddings, dim=1)
         _, hidden = self.gru(temporal_embeddings)
         h = hidden[-1]
+
+        if return_attention:
+            att_map = torch.stack(temporal_attentions, dim=-1)  # (B, num_nodes, seq_len)
+            return h, last_gate, att_map
         return h, last_gate
 
-    def forward(self, x, edge_index, alpha=1.0):
-        h, gate = self.extract_embedding(x, edge_index)
-        seizure_logits = self.seizure_classifier(h)
-        h_reversed = self.grl(h, alpha=alpha)
-        patient_logits = self.patient_discriminator(h_reversed)
-        return seizure_logits, patient_logits, h, gate
+    def forward(self, x, edge_index, alpha=1.0, return_attention=False):
+        if return_attention:
+            h, gate, att_map = self.extract_embedding(x, edge_index, return_attention=True)
+            seizure_logits = self.seizure_classifier(h)
+            h_reversed = self.grl(h, alpha=alpha)
+            patient_logits = self.patient_discriminator(h_reversed)
+            return seizure_logits, patient_logits, h, gate, att_map
+        else:
+            h, gate = self.extract_embedding(x, edge_index, return_attention=False)
+            seizure_logits = self.seizure_classifier(h)
+            h_reversed = self.grl(h, alpha=alpha)
+            patient_logits = self.patient_discriminator(h_reversed)
+            return seizure_logits, patient_logits, h, gate
