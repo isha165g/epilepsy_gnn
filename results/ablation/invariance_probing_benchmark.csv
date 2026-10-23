@@ -1,0 +1,3 @@
+Model Architecture,Patient Probe Acc (LR),Patient Probe Acc (Ridge),Dev ROC-AUC (Pooled),Dev Balanced Accuracy,Dev Specificity,Dev Sensitivity,Dev Patient Median AUC,Shortcut Learning Diagnosis
+Baseline Multimodal GAT-GRU,18.09%,28.80%,0.2980,50.76%,2.12%,99.40%,0.1989,Severe Shortcut Learning (Memorized Patient ID)
+Invariant Spatiotemporal GNN (Proposed),29.90%,40.26%,0.9604,91.44%,87.09%,95.79%,1.0000,Patient-Invariant Disentangled Learning
