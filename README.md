@@ -1,12 +1,15 @@
-# Patient-Independent Spatiotemporal Graph Neural Networks of Multi-Modal Data for Epileptic Seizure Detection
+# Improvement in Epileptic Seizure Detection from Electroencephalography Using Spatiotemporal Patient-Invariant Graph Neural Networks of Multi-Modal Data
 
+[![DOI](https://zenodo.org/badge/1358497139.svg)](https://doi.org/10.5281/zenodo.23689051)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![PyTorch 2.6](https://img.shields.io/badge/PyTorch-2.6-ee4c2c.svg)](https://pytorch.org/)
 [![PyG](https://img.shields.io/badge/PyG-Graph_Neural_Networks-3C2179.svg)](https://pyg.org/)
 [![Dataset](https://img.shields.io/badge/Dataset-TUSZ_v1.5.2-brightgreen.svg)](https://www.isip.piconepress.com/projects/tuh_eeg/)
 [![Status](https://img.shields.io/badge/Status-Research_Complete-success.svg)]()
 
-> **Finalized Research Topic**: *Improvement in Epileptic Seizure Detection from Electroencephalography Using Patient-Independent Spatiotemporal Graph Neural Networks of Multi-Modal Data*  
+> **Published Preprint**: *Improvement in Epileptic Seizure Detection from Electroencephalography Using Spatiotemporal Patient-Invariant Graph Neural Networks of Multi-Modal Data*  
+> **DOI**: [10.5281/zenodo.23689051](https://doi.org/10.5281/zenodo.23689051)  
 > **Benchmark Reference**: Aligned and benchmarked against **Tang et al. (*ICLR 2022*)**, Temple University Hospital Seizure Corpus (**TUSZ v1.5.2**), and clinical baseline architectures.
 
 ---
@@ -34,15 +37,15 @@ Automated epileptic seizure detection from electroencephalography (EEG) in real-
 
 1. **Patient Shortcut Learning & Generalization Failure**: Deep neural networks easily overfit to patient-specific baseline morphology and electrode impedance offsets. On unseen patients, unregularized baseline models collapse (achieving high nominal sensitivity but near-zero specificity).
 2. **Static vs. Dynamic Brain Connectivity**: Standard graph neural networks assume static physical distance graphs, failing to capture time-varying hypersynchrony across distant cortical areas during ictogenesis.
-3. **Interpretability Latency vs. Precision Dilemma**: Perturbation-based occlusion mapping (*Tang et al., ICLR 2022*) requires $O(N \times T) = 101$ forward passes per clip (~$500\text{ ms}$), rendering it too slow for 24/7 continuous bedside monitoring, while raw attention maps remain spatially diffuse.
+3. **Interpretability Latency vs. Precision Dilemma**: Perturbation-based occlusion mapping (*Tang et al., ICLR 2022*) requires $O(N \times T) = 101$ forward passes per clip (~500 ms), rendering it too slow for 24/7 continuous bedside monitoring, while raw attention maps remain spatially diffuse.
 
 ### Project Contributions
 - **Multi-Modal Gated Fusion (GMU)**: Unifies 16 time-domain descriptors (Hjorth parameters, line length, energy) and 10 frequency-domain spectral metrics with dynamic gating.
 - **Dynamic & Adaptive Topologies**: Integrates Phase-Locking Value (PLV) functional connectivity and end-to-end differentiable learnable graphs requiring zero physical sensor coordinates.
-- **Provable Patient Invariance**: Incorporates an adversarial patient discriminator coupled via a dynamic Gradient Reversal Layer (GRL), suppressing patient identity leakage from $76.7\%$ down to $36.8\%$ (chance level $\approx 33.3\%$).
+- **Provable Patient Invariance**: Incorporates an adversarial patient discriminator coupled via a dynamic Gradient Reversal Layer (GRL), suppressing patient identity leakage from **76.7%** down to **36.8%** (chance level ≈ 33.3%).
 - **Dual-Mode Clinical Interpretability**:
-  - *Real-Time Bedside Alerting Mode*: **Feature-Energy Weighted Graph Attention** at single-pass $O(1)$ latency ($16.2\text{ ms}$, $35\times$ faster than Tang et al.).
-  - *Physician Diagnostic Review Mode*: **Energy-Guided Focal Coarse-to-Fine Occlusion**, boosting localization precision to **$76.11\%$** and high-confidence localization ($>0.8$) to **$69.0\%$** ($3.2\times$ higher than Tang et al.) with a $5.0\times$ speedup.
+  - *Real-Time Bedside Alerting Mode*: **Feature-Energy Weighted Graph Attention** at single-pass $O(1)$ latency (**16.2 ms**, **35×** faster than Tang et al.).
+  - *Physician Diagnostic Review Mode*: **Energy-Guided Focal Coarse-to-Fine Occlusion**, boosting localization precision to **76.11%** and high-confidence localization (>0.8) to **69.0%** (**3.2×** higher than Tang et al.) with a **5.0×** speedup.
 
 ---
 
@@ -93,48 +96,73 @@ flowchart TD
 
 ### Phase 1: Protocol & Montage Harmonization
 - **Montage Standardization**: Implemented the clinical standard 20-channel Temporal Central Parasagittal (TCP) bipolar montage (`src/preprocessing/montage.py`), which eliminates reference electrode contamination.
-- **Unipolar Mapping**: Established an exact $(20 \times 19)$ linear projection matrix $M$ ($X_{\text{bipolar}} = M X_{\text{unipolar}}$) ensuring direct mathematical comparability against Tang et al.’s 19-channel 10–20 unipolar baseline.
+- **Unipolar Mapping**: Established an exact $20 \times 19$ linear projection matrix $M$ ($X_{\text{bipolar}} = M X_{\text{unipolar}}$) ensuring direct mathematical comparability against Tang et al.’s 19-channel 10–20 unipolar baseline.
 - **Zero-Overlap Partitioning**: Partitioned 53 subjects with strict patient isolation (30 Train, 17 Dev, 6 Eval), excluding the 5 known contaminated TUSZ test patients (`00001027`, `00004671`, `00001981`, `00006546`, `00009842`).
 - **Temporal Alignment**: Synchronized evaluation across both 12-second (fast alerting) and 60-second (context-aware detection) windows.
 
 ### Phase 2: Multi-Modal Time-Frequency Gated Fusion (GMU)
 - **Node Features (26-D)**:
   - *Time Domain (16-D)*: Variance, Mean Amplitude, Line Length, Peak-to-Peak Amplitude, Kurtosis, Skewness, Zero-Crossing Rate, Energy, Hjorth Activity, Mobility, and Complexity.
-  - *Frequency Domain (10-D)*: Absolute band powers in $\delta$ (1–4 Hz), $\theta$ (4–8 Hz), $\alpha$ (8–12 Hz), $\beta$ (12–30 Hz), $\gamma$ (30–45 Hz), normalized band power ratios ($P_{\text{band}} / P_{\text{total}}$), and spectral entropy.
+  - *Frequency Domain (10-D)*: Absolute band powers in δ (1–4 Hz), θ (4–8 Hz), α (8–12 Hz), β (12–30 Hz), γ (30–45 Hz), normalized band power ratios ($P_{\text{band}} / P_{\text{total}}$), and spectral entropy.
 - **Gated Multimodal Unit (GMU)**: Dynamically weights temporal vs. spectral modalities conditioned on signal dynamics:
-  $$h_t = \tanh(W_t x_t + b_t), \quad h_f = \tanh(W_f x_f + b_f), \quad z = \sigma(W_z [x_t, x_f] + b_z)$$
-  $$x_{\text{fused}} = z \odot h_t + (1 - z) \odot h_f$$
+
+$$
+\begin{aligned}
+h_t &= \tanh(W_t x_t + b_t), \quad h_f = \tanh(W_f x_f + b_f) \\
+z &= \sigma(W_z [x_t, x_f] + b_z) \\
+x_{\text{fused}} &= z \odot h_t + (1 - z) \odot h_f
+\end{aligned}
+$$
 - **Detection Results**: Achieved **Balanced Accuracy 91.44%**, **ROC-AUC 0.9604**, Sensitivity 95.79%, Specificity 87.09% across 17 unseen patients.
 
 ### Phase 3: Dynamic Brain Topologies & Learnable Graphs
-- **Functional Connectivity (PLV)**: Computed instantaneous phase synchrony via Hilbert transform across $\theta\text{–}\beta$ (4–30 Hz) bands:
-  $$\text{PLV}_{ij} = \frac{1}{T} \left| \sum_{t=1}^T \exp(j(\phi_{i}(t) - \phi_{j}(t))) \right|$$
+- **Functional Connectivity (PLV)**: Computed instantaneous phase synchrony via Hilbert transform across θ–β (4–30 Hz) bands:
+
+$$
+\text{PLV}_{ij} = \frac{1}{T} \left| \sum_{t=1}^T \exp\left(j\left(\phi_{i}(t) - \phi_{j}(t)\right)\right) \right|
+$$
 - **Learnable Adaptive Topology**: End-to-end differentiable graph learning:
-  $$A_{\text{adaptive}} = \operatorname{Softmax}(\operatorname{ReLU}(E_A E_A^T))$$
+
+$$
+A_{\text{adaptive}} = \operatorname{Softmax}\left(\operatorname{ReLU}\left(E_A E_A^T\right)\right)
+$$
   Eliminates dependency on physical electrode coordinates while achieving **89.93% Balanced Accuracy**.
 - **Topology Ablation Matrix**:
   - *Physical Euclidean*: 85.92% Balanced Accuracy, 0.9324 AUROC
-  - *Dynamic Pearson Correlation ($\tau=3$)*: 86.84% Balanced Accuracy, 0.9388 AUROC
+  - *Dynamic Pearson Correlation (τ = 3)*: 86.84% Balanced Accuracy, 0.9388 AUROC
   - *Learnable Adaptive Graph*: 89.93% Balanced Accuracy, 0.9482 AUROC
   - *Dynamic Phase-Locking Value (PLV)*: **91.44% Balanced Accuracy**, **0.9558 AUROC**, **88.25% Specificity**
 
 ### Phase 4: Domain-Adversarial Patient Invariance (DANN / GRL)
 - **Gradient Reversal Layer (GRL)**: Formulates a minimax objective ensuring the shared spatiotemporal encoder learns representations that maximize seizure discriminability while minimizing patient identifiability:
-  $$\min_{\theta_{\text{task}}} \max_{\theta_{\text{enc}}} \left[ \mathcal{L}_{\text{task}}(y, \hat{y}) - \lambda \cdot \alpha(p) \cdot \mathcal{L}_{\text{patient}}(d, \hat{d}) \right]$$
-- **Dynamic Schedule**: $\alpha(p) = \frac{2}{1 + \exp(-10p)} - 1$ smoothly transitions from $0 \to 1.0$.
-- **Quantitative Probing**: Linear probe patient ID accuracy drops from **$76.7\%$ down to $36.8\%$** (chance level $\approx 33.3\%$). Resolves specificity collapse (1.56% $\to$ 87.09%) on unseen patients.
+
+$$
+\min_{\theta_{\text{task}}} \max_{\theta_{\text{enc}}} \left[ \mathcal{L}_{\text{task}}(y, \hat{y}) - \lambda \cdot \alpha(p) \cdot \mathcal{L}_{\text{patient}}(d, \hat{d}) \right]
+$$
+- **Dynamic Schedule**: $\alpha(p) = \frac{2}{1 + \exp(-10p)} - 1$ smoothly transitions from 0 to 1.0.
+- **Quantitative Probing**: Linear probe patient ID accuracy drops from **76.7% down to 36.8%** (chance level ≈ 33.3%). Resolves specificity collapse (1.56% $\to$ 87.09%) on unseen patients.
 
 ### Phase 5: Quantitative Seizure Localization & Dual-Mode Interpretability
 - **Metric Definitions** (*Tang et al., ICLR 2022*):
-  $$\text{Coverage} = \frac{\sum_{i,j} \mathbb{I}(M_{ij} \ge \tau) \cdot M^{\text{annot}}_{ij}}{\sum_{i,j} M^{\text{annot}}_{ij}}, \qquad \text{Localization (Precision)} = \frac{\sum_{i,j} \mathbb{I}(M_{ij} \ge \tau) \cdot M^{\text{annot}}_{ij}}{\sum_{i,j} \mathbb{I}(M_{ij} \ge \tau)}$$
+
+$$
+\begin{aligned}
+\text{Coverage} &= \frac{\sum_{i,j} \mathbb{I}(M_{ij} \ge \tau) \cdot M^{\text{annot}}_{ij}}{\sum_{i,j} M^{\text{annot}}_{ij}} \\
+\text{Localization (Precision)} &= \frac{\sum_{i,j} \mathbb{I}(M_{ij} \ge \tau) \cdot M^{\text{annot}}_{ij}}{\sum_{i,j} \mathbb{I}(M_{ij} \ge \tau)}
+\end{aligned}
+$$
 - **Feature-Energy Weighted Graph Attention** (*Real-Time Bedside Mode*):
-  $$S_{it}^{\text{hybrid}} = A_{it}^{\text{GAT}} \odot \frac{\text{LineLength}(X_{it})}{\max_k \text{LineLength}(X_{kt})}$$
-  Operates in $O(1)$ single forward pass ($16.2\text{ ms}$, **$35\times$ faster than Tang et al.**), achieving $38.2\%$ coverage and $52.8\%$ precision.
+
+$$
+S_{it}^{\text{hybrid}} = A_{it}^{\text{GAT}} \odot \frac{\text{LineLength}(X_{it})}{\max_k \text{LineLength}(X_{kt})}
+$$
+
+  Operates in $O(1)$ single forward pass (**16.2 ms**, **35× faster than Tang et al.**), achieving 38.2% coverage and 52.8% precision.
 - **Energy-Guided Focal Coarse-to-Fine Occlusion** (*Physician Diagnostic Review Mode*):
   - Stage 1 ($O(1)$): Select top-$K$ primary seizure onset channels ($K=3$) using energy-weighted attention.
   - Stage 2 ($15$ passes): Selective occlusion strictly on candidate channels.
-  - Stage 3 ($\tau=0.70$): Calibrated energy modulation.
-  - Achieves **$76.11\%$ Localization Precision** and **$69.0\%$ highly precise clips ($>0.8$)** ($3.2\times$ higher than Tang et al.) with a **$5.0\times$ speedup** ($112.4\text{ ms}$ vs $566.8\text{ ms}$).
+  - Stage 3 (τ = 0.70): Calibrated energy modulation.
+  - Achieves **76.11% Localization Precision** and **69.0% highly precise clips (>0.8)** (3.2× higher than Tang et al.) with a **5.0× speedup** (112.4 ms vs 566.8 ms).
 
 ### Phase 6: Clinical-Grade Master Benchmark & Journal Deliverables
 - Compiled master comparison against all baseline CNNs, RNNs, and Graph SOTA models on TUSZ.
@@ -150,7 +178,7 @@ Evaluated on held-out test splits with zero patient overlap on TUSZ v1.5.2:
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Dense-CNN** *(Saab et al., 2020)* | Euclidean Grid / Raw Time-Series | No | $0.812 \pm 0.014$ | $0.796 \pm 0.014$ | $78.4\%$ | $3.5\%$ | $12.4\text{ ms}$ |
 | **CNN-LSTM** *(Ahmedt-Aristizabal et al., 2020)* | Grid + Recurrent / Raw Time-Series | No | $0.749 \pm 0.006$ | $0.682 \pm 0.003$ | $75.2\%$ | $<3.0\%$ | $18.6\text{ ms}$ |
-| **Corr-DCRNN w/o Pre-train** *(Tang et al., 2022)* | Dynamic Pearson ($\tau=3$) / FFT | No | $0.812 \pm 0.012$ | $0.804 \pm 0.015$ | $74.8\%$ | $6.3\%$ | $482.5\text{ ms}$ |
+| **Corr-DCRNN w/o Pre-train** *(Tang et al., 2022)* | Dynamic Pearson (τ = 3) / FFT | No | $0.812 \pm 0.012$ | $0.804 \pm 0.015$ | $74.8\%$ | $6.3\%$ | $482.5\text{ ms}$ |
 | **Dist-DCRNN w/o Pre-train** *(Tang et al., 2022)* | Physical Euclidean / FFT | No | $0.824 \pm 0.020$ | $0.793 \pm 0.022$ | $76.7\%$ | $6.3\%$ | $484.2\text{ ms}$ |
 | **Corr-DCRNN w/ Pre-train** *(Tang et al., 2022)* | Dynamic Pearson / Self-Supervised MAE | No | $0.861 \pm 0.005$ | $0.850 \pm 0.014$ | $71.5\%$ | $25.4\%$ | $482.5\text{ ms}$ |
 | **Dist-DCRNN w/ Pre-train** *(Tang et al., 2022)* | Physical Euclidean / Self-Supervised MAE | No | $0.866 \pm 0.016$ | $0.875 \pm 0.016$ | $72.9\%$ | $21.8\%$ | $484.2\text{ ms}$ |
@@ -278,11 +306,13 @@ PYTHONPATH=. python3 src/evaluation/plot_topology_ablation.py
 ## Citation & Acknowledgments
 If you utilize this codebase, methodologies, or benchmarks in your research, please cite:
 ```bibtex
-@article{epilepsy_gnn_2026,
+@article{gandhi2026epilepsy,
   title={Improvement in Epileptic Seizure Detection from Electroencephalography Using Spatiotemporal Patient-Invariant Graph Neural Networks of Multi-Modal Data},
   author={Gandhi, Isha Pritesh and Priya A, Devi},
-  journal={Preprint},
-  year={2026}
+  journal={arXiv preprint},
+  year={2026},
+  doi={10.5281/zenodo.23689051},
+  url={https://doi.org/10.5281/zenodo.23689051}
 }
 ```
 *We acknowledge the Temple University Hospital EEG Seizure Corpus (TUSZ v1.5.2) and the foundational graph benchmarking framework established by Tang et al. (ICLR 2022).*
