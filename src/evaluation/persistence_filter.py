@@ -25,7 +25,7 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 INPUT_CSV = REPO_DIR / 'results/ablation/invariance_evaluation/invariant_dev_predictions.csv'
 OUTPUT_DIR = REPO_DIR / 'results/ablation/invariance_evaluation'
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

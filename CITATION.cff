@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, pipeline, or methodology in your research, please cite it as below."
+title: "Improvement in Epileptic Seizure Detection from Electroencephalography Using Spatiotemporal Patient-Invariant Graph Neural Networks of Multi-Modal Data"
+authors:
+  - family-names: "Gandhi"
+    given-names: "Isha Pritesh"
+    email: "isha.165g@gmail.com"
+    affiliation: "Department of Computer Science and Engineering, Vellore Institute of Technology, Vellore, Tamil Nadu, India"
+  - family-names: "Priya A"
+    given-names: "Devi"
+    name-particle: "Dr."
+    email: "devipriya.av@vit.ac.in"
+    affiliation: "Department of Computer Science and Engineering, Vellore Institute of Technology, Vellore, Tamil Nadu, India"
+date-released: 2026-10-27
+url: "https://github.com/isha165g/epilepsy_gnn"
+keywords:
+  - "epileptic seizure detection"
+  - "electroencephalography"
+  - "spatiotemporal graph neural networks"
+  - "domain adversarial learning"
+  - "phase locking value"
+  - "clinical interpretability"
+  - "tusz v1.5.2"
+license: "MIT"

@@ -13,7 +13,7 @@ import mne
 import numpy as np
 import pandas as pd
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 sys.path.append(str(REPO_DIR))
 
 from src.preprocessing.montage import create_bipolar_montage, resample_data

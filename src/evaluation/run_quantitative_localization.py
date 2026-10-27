@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import torch
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 import sys
 sys.path.append(str(REPO_DIR))
 

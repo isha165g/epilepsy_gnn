@@ -18,7 +18,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 DATA_PATH = REPO_DIR / 'results/ablation/saliency_heatmaps_sample.npz'
 CSV_PATH = REPO_DIR / 'results/ablation/quantitative_localization_benchmark.csv'
 OUTPUT_PNG = REPO_DIR / 'results/ablation/quantitative_localization_visualization.png'

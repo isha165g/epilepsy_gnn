@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import roc_curve, roc_auc_score
 import matplotlib.pyplot as plt
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 import sys
 sys.path.append(str(REPO_DIR))
 

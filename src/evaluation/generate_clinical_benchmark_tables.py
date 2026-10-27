@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 TABLES_DIR = REPO_DIR / 'results/tables'
 FIGURES_DIR = REPO_DIR / 'results/figures'
 TABLES_DIR.mkdir(parents=True, exist_ok=True)

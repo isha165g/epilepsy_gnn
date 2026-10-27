@@ -279,8 +279,8 @@ PYTHONPATH=. python3 src/evaluation/plot_topology_ablation.py
 If you utilize this codebase, methodologies, or benchmarks in your research, please cite:
 ```bibtex
 @article{epilepsy_gnn_2026,
-  title={Improvement in Epileptic Seizure Detection from Electroencephalography Using Patient-Independent Spatiotemporal Graph Neural Networks of Multi-Modal Data},
-  author={Research Team},
+  title={Improvement in Epileptic Seizure Detection from Electroencephalography Using Spatiotemporal Patient-Invariant Graph Neural Networks of Multi-Modal Data},
+  author={Gandhi, Isha Pritesh and Priya A, Devi},
   journal={Preprint},
   year={2026}
 }

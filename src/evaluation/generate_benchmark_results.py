@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_curve, roc_auc_score
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 RESULTS_DIR = REPO_DIR / 'results/ablation'
 INVARIANCE_DIR = RESULTS_DIR / 'invariance_evaluation'
 BASELINES_DIR = RESULTS_DIR / 'baselines'

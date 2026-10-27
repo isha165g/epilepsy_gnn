@@ -18,7 +18,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 METADATA_PATH = REPO_DIR / 'data/metadata/recordings_metadata.csv'
 ELIGIBLE_EDFS_PATH = REPO_DIR / 'data/metadata/eligible_edfs.csv'
 OUTPUT_MANIFEST_PATH = REPO_DIR / 'data/metadata/detection_manifest.csv'

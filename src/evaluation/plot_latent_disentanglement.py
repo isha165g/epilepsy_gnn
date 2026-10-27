@@ -15,7 +15,7 @@ import matplotlib.cm as cm
 from sklearn.manifold import TSNE
 import umap
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 DATA_PATH = REPO_DIR / 'results/ablation/latent_embeddings_for_disentanglement.npz'
 OUTPUT_DIR = REPO_DIR / 'results/ablation'
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

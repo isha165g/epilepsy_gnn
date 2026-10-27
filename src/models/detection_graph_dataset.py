@@ -10,7 +10,7 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = REPO_DIR / 'data/metadata/detection_graph_manifest.csv'
 SEQUENCE_LENGTH = 1
 

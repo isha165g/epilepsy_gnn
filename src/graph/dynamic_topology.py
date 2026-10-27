@@ -12,7 +12,7 @@ import numpy as np
 import scipy.signal
 import torch
 
-REPO_DIR = Path('/home/isha/epilepsy_gnn')
+REPO_DIR = Path(__file__).resolve().parents[2]
 STATIC_ADJACENCY_PATH = REPO_DIR / 'data/graph/adjacency.npy'
 
 
